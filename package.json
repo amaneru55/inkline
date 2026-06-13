@@ -1,0 +1,63 @@
+{
+  "name": "inknest",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "pnpm@11.6.0",
+  "engines": {
+    "node": "26.3.0",
+    "pnpm": "11.6.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "check": "biome check .",
+    "check:write": "biome check --write .",
+    "preview": "vite preview",
+    "sb": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006",
+    "sb:build": "storybook build",
+    "storybook:build": "storybook build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@emotion/is-prop-valid": "^1.4.0",
+    "@heroui/react": "^3.1.0",
+    "@tailwindcss/vite": "^4.3.1",
+    "@tanstack/react-query": "^5.101.0",
+    "@tanstack/react-router": "^1.170.15",
+    "@tanstack/react-virtual": "^3.14.2",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "i18next": "^26.3.1",
+    "motion": "^12.40.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-i18next": "^17.0.8",
+    "tailwindcss": "^4.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.0",
+    "@storybook/react-vite": "^10.4.4",
+    "@tauri-apps/cli": "^2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.9.3",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "@vitest/coverage-v8": "^4.1.8",
+    "jsdom": "^29.1.1",
+    "storybook": "^10.4.4",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4",
+    "vitest": "^4.1.8"
+  },
+  "volta": {
+    "node": "26.3.0"
+  }
+}
