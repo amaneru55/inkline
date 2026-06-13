@@ -123,3 +123,11 @@ Frontend requests chapter open
 ```
 
 The frontend owns immediate navigation responsiveness. Rust owns durable progress, resource resolution, and cache lifecycle.
+
+## Storage Boundary
+
+Local library storage is owned by Rust. The SQLite database lives under the Tauri app config directory as `library.sqlite3`, next to `settings.json` but with a separate lifecycle.
+
+Frontend TypeScript may call storage through typed infrastructure adapters only. It validates Tauri command responses with Zod schemas in `src/core/storage`, then passes parsed DTOs into app state or future query caches. It must not construct SQL, open SQLite files, or use `localStorage` for library data.
+
+Rust owns schema initialization, migrations, transactions, indexes, SQLite pragmas, and durable writes for sources, manga, chapters, pages, library items, and reading progress. The first schema uses `PRAGMA user_version = 1`; future migrations should move monotonically from the current version and keep migration steps idempotent.
