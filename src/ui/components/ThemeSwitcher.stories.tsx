@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { SettingsProvider } from "../../app/settings/SettingsProvider";
+import { createMemorySettingsStore } from "../../core/settings/store";
 import { ThemeProvider } from "../theme/theme";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 
@@ -7,11 +9,13 @@ const meta = {
   component: ThemeSwitcher,
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <div className="p-6">
-          <Story />
-        </div>
-      </ThemeProvider>
+      <SettingsProvider store={createMemorySettingsStore()}>
+        <ThemeProvider>
+          <div className="p-6">
+            <Story />
+          </div>
+        </ThemeProvider>
+      </SettingsProvider>
     ),
   ],
 } satisfies Meta<typeof ThemeSwitcher>;

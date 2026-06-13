@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
-import "../../i18n";
+import { useEffect, useState } from "react";
+import { i18next } from "../../i18n";
 import { ThemeProvider } from "../../ui/theme/theme";
+import { SettingsProvider, useInklineSettings } from "../settings/SettingsProvider";
 
 type AppProvidersProps = {
   children: React.ReactNode;
@@ -22,7 +23,22 @@ export function AppProviders({ children }: AppProvidersProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <SettingsProvider>
+        <AppSettingsEffects />
+        <ThemeProvider>{children}</ThemeProvider>
+      </SettingsProvider>
     </QueryClientProvider>
   );
+}
+
+function AppSettingsEffects() {
+  const { settings } = useInklineSettings();
+
+  useEffect(() => {
+    if (i18next.resolvedLanguage !== settings.language) {
+      void i18next.changeLanguage(settings.language);
+    }
+  }, [settings.language]);
+
+  return null;
 }

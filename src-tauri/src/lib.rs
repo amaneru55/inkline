@@ -1,5 +1,6 @@
 #[cfg(desktop)]
 mod desktop;
+mod settings;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -11,7 +12,11 @@ pub fn run() {
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_window_state::Builder::new().build())
-        .invoke_handler(tauri::generate_handler![greet]);
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            settings::get_app_settings,
+            settings::set_app_settings
+        ]);
 
     #[cfg(desktop)]
     let builder = desktop::configure(builder);

@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { SettingsProvider } from "../../app/settings/SettingsProvider";
+import { createMemorySettingsStore } from "../../core/settings/store";
 import "../../i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
@@ -7,9 +9,11 @@ const meta = {
   component: LanguageSwitcher,
   decorators: [
     (Story) => (
-      <div className="p-6">
-        <Story />
-      </div>
+      <SettingsProvider store={createMemorySettingsStore()}>
+        <div className="p-6">
+          <Story />
+        </div>
+      </SettingsProvider>
     ),
   ],
 } satisfies Meta<typeof LanguageSwitcher>;

@@ -1,5 +1,6 @@
 import { Button } from "@heroui/react";
 import { useTranslation } from "react-i18next";
+import { useInklineSettings } from "../../app/settings/SettingsProvider";
 import { type Locale, supportedLocales } from "../../i18n";
 
 const localeLabelKeys = {
@@ -8,8 +9,9 @@ const localeLabelKeys = {
 } as const satisfies Record<Locale, string>;
 
 export function LanguageSwitcher() {
-  const { i18n, t } = useTranslation();
-  const currentLocale = i18n.resolvedLanguage;
+  const { t } = useTranslation();
+  const { settings, updateSettings } = useInklineSettings();
+  const currentLocale = settings.language;
 
   return (
     <fieldset className="control-group">
@@ -19,7 +21,7 @@ export function LanguageSwitcher() {
           className="control-button"
           data-active={currentLocale === locale}
           key={locale}
-          onPress={() => void i18n.changeLanguage(locale)}
+          onPress={() => void updateSettings({ language: locale })}
           size="sm"
         >
           {t(localeLabelKeys[locale])}

@@ -178,3 +178,11 @@ pnpm tauri dev
 ```bash
 make tauri-build
 ```
+
+## 当前基础设施决策
+
+- 当前不急于展开完整设置页 UI，优先完成可靠的应用设置、资料库、导入和阅读器基础能力。
+- 应用级偏好设置通过 Tauri command 持久化到系统 app config 目录下的 `settings.json`，不使用 `localStorage` 作为真实应用存储。
+- `themeName` 和 `themeMode` 分离：主题表示 token 套装，外观模式表示 `system` / `light` / `dark`。
+- 语言、主题、关闭行为等轻量偏好先进入 app settings；书架、阅读进度、任务、缓存索引、AI 结果等业务数据后续进入 SQLite。
+- Storybook 和测试使用内存 settings store，避免污染真实用户配置。

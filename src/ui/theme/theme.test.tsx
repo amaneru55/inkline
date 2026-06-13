@@ -1,14 +1,10 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  getThemeFullName,
-  resolveColorMode,
-  resolveStoredThemeMode,
-  resolveStoredThemeName,
-  ThemeProvider,
-  useInklineTheme,
-} from "./theme";
+import { SettingsProvider } from "../../app/settings/SettingsProvider";
+import type { AppSettings } from "../../core/settings/schema";
+import { createMemorySettingsStore } from "../../core/settings/store";
+import { getThemeFullName, resolveColorMode, ThemeProvider, useInklineTheme } from "./theme";
 
 class TestMediaQueryList extends EventTarget implements MediaQueryList {
   matches: boolean;
@@ -64,6 +60,16 @@ function ThemeProbe() {
   );
 }
 
+function renderThemeProbe(initialSettings?: AppSettings) {
+  render(
+    <SettingsProvider store={createMemorySettingsStore(initialSettings)}>
+      <ThemeProvider>
+        <ThemeProbe />
+      </ThemeProvider>
+    </SettingsProvider>,
+  );
+}
+
 describe("ThemeProvider", () => {
   beforeEach(() => {
     mediaQueryList = new TestMediaQueryList(false);
@@ -75,7 +81,6 @@ describe("ThemeProvider", () => {
 
   afterEach(() => {
     cleanup();
-    window.localStorage.clear();
     document.documentElement.removeAttribute("data-theme");
     document.documentElement.removeAttribute("data-theme-name");
     document.documentElement.removeAttribute("data-theme-mode");
@@ -86,15 +91,6 @@ describe("ThemeProvider", () => {
     vi.restoreAllMocks();
   });
 
-  it("resolves stored theme names and modes", () => {
-    expect(resolveStoredThemeName("default")).toBe("default");
-    expect(resolveStoredThemeName("unknown")).toBe("inkline");
-    expect(resolveStoredThemeName(null)).toBe("inkline");
-    expect(resolveStoredThemeMode("system")).toBe("system");
-    expect(resolveStoredThemeMode("dark")).toBe("dark");
-    expect(resolveStoredThemeMode("unknown")).toBe("system");
-  });
-
   it("resolves full theme names from theme and color mode", () => {
     expect(resolveColorMode("system", true)).toBe("dark");
     expect(resolveColorMode("system", false)).toBe("light");
@@ -103,59 +99,37 @@ describe("ThemeProvider", () => {
     expect(getThemeFullName("inkline", "light")).toBe("inkline-light");
   });
 
-  it("uses stored theme name and mode as initial values", () => {
-    window.localStorage.setItem("inkline.theme.name", "default");
-    window.localStorage.setItem("inkline.theme.mode", "dark");
+  it("uses persisted app settings as initial values", async () => {
+    renderThemeProbe({
+      themeName: "default",
+      themeMode: "dark",
+      language: "zh-CN",
+      closeBehavior: "hide-to-tray",
+    });
 
-    render(
-      <ThemeProvider>
-        <ThemeProbe />
-      </ThemeProvider>,
-    );
+    await waitFor(() => expect(screen.getByLabelText("theme-name")).toHaveTextContent("default"));
 
-    expect(screen.getByLabelText("theme-name")).toHaveTextContent("default");
     expect(screen.getByLabelText("theme-mode")).toHaveTextContent("dark");
     expect(screen.getByLabelText("theme-full-name")).toHaveTextContent("dark");
   });
 
-  it("migrates the legacy dark theme value into default dark mode", () => {
-    window.localStorage.setItem("inkline.theme", "dark");
-
-    render(
-      <ThemeProvider>
-        <ThemeProbe />
-      </ThemeProvider>,
-    );
-
-    expect(screen.getByLabelText("theme-name")).toHaveTextContent("default");
-    expect(screen.getByLabelText("theme-mode")).toHaveTextContent("dark");
-  });
-
   it("applies selected theme attributes to the document element", async () => {
-    render(
-      <ThemeProvider>
-        <ThemeProbe />
-      </ThemeProvider>,
-    );
+    renderThemeProbe();
 
     await userEvent.click(screen.getByRole("button", { name: "dark" }));
     await userEvent.click(screen.getByRole("button", { name: "default" }));
 
-    expect(document.documentElement.dataset.theme).toBe("dark");
+    await waitFor(() => expect(document.documentElement.dataset.theme).toBe("dark"));
     expect(document.documentElement.dataset.themeName).toBe("default");
     expect(document.documentElement.dataset.themeMode).toBe("dark");
     expect(document.documentElement.dataset.colorMode).toBe("dark");
     expect(document.documentElement).toHaveClass("dark");
   });
 
-  it("tracks system color mode while mode is system", () => {
-    render(
-      <ThemeProvider>
-        <ThemeProbe />
-      </ThemeProvider>,
-    );
+  it("tracks system color mode while mode is system", async () => {
+    renderThemeProbe();
 
-    expect(screen.getByLabelText("color-mode")).toHaveTextContent("light");
+    await waitFor(() => expect(screen.getByLabelText("color-mode")).toHaveTextContent("light"));
 
     act(() => mediaQueryList.setMatches(true));
 
