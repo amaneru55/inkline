@@ -170,7 +170,7 @@ fn database_path<R: Runtime>(app: &AppHandle<R>) -> Result<PathBuf, String> {
         .map_err(|error| format!("Failed to resolve app config directory: {error}"))
 }
 
-fn open_database(path: &Path) -> Result<Connection, String> {
+pub(super) fn open_database(path: &Path) -> Result<Connection, String> {
     let connection = open_connection(path)?;
     ensure_schema(&connection)?;
 
@@ -298,7 +298,7 @@ fn apply_schema_v1(connection: &Connection) -> Result<(), String> {
         .map_err(|error| format!("Failed to initialize database schema: {error}"))
 }
 
-fn upsert_library_snapshot(
+pub(super) fn upsert_library_snapshot(
     connection: &mut Connection,
     snapshot: &LibrarySnapshot,
 ) -> Result<(), String> {

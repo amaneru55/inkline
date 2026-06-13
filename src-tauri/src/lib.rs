@@ -21,7 +21,8 @@ pub fn run() {
             storage::database::storage_get_reading_progress,
             storage::database::storage_init_database,
             storage::database::storage_upsert_library_snapshot,
-            storage::database::storage_upsert_reading_progress
+            storage::database::storage_upsert_reading_progress,
+            storage::folder_import::storage_import_local_folder
         ]);
 
     #[cfg(desktop)]

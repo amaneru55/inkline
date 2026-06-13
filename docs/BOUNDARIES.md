@@ -131,3 +131,5 @@ Local library storage is owned by Rust. The SQLite database lives under the Taur
 Frontend TypeScript may call storage through typed infrastructure adapters only. It validates Tauri command responses with Zod schemas in `src/core/storage`, then passes parsed DTOs into app state or future query caches. It must not construct SQL, open SQLite files, or use `localStorage` for library data.
 
 Rust owns schema initialization, migrations, transactions, indexes, SQLite pragmas, and durable writes for sources, manga, chapters, pages, library items, and reading progress. The first schema uses `PRAGMA user_version = 1`; future migrations should move monotonically from the current version and keep migration steps idempotent.
+
+Local folder import is also owned by Rust once a folder path is selected. Rust scans, filters, sorts, creates persistence DTOs, and writes the snapshot to SQLite. The frontend may initiate the command and validate the returned snapshot, but it should not perform the authoritative persisted import.

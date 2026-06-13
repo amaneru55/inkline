@@ -4,6 +4,8 @@
 
 Inkline's first local library storage layer is implemented in Rust with SQLite through `rusqlite 0.40.1` and the bundled SQLite feature. The database is created in the Tauri app config directory as `library.sqlite3`.
 
+The current storage service can import a local image folder by path, generate the first persisted library snapshot, and return it through a typed Tauri boundary. Full library UI and metadata editing are intentionally still future work.
+
 Storage docs: [docs/STORAGE.md](docs/STORAGE.md)
 
 InkNest 是一个本地优先的跨平台漫画阅读器项目，产品名为 Inkline，中文名为“墨线”。它的目标是在 Windows、macOS、Linux、Android 和 iOS 上提供一致、顺滑、可扩展的漫画阅读体验。

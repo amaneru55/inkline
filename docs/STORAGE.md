@@ -63,9 +63,23 @@ Frontend TypeScript owns:
 
 The frontend must not open SQLite directly and must not use `localStorage` for real library data.
 
+## Local Folder Import
+
+The first import service is path driven. The frontend passes a selected folder path to Rust, and Rust performs the durable work:
+
+- recursively scans the folder
+- filters supported image extensions
+- naturally sorts page paths
+- creates one local source, one manga, one chapter, pages, and one library item
+- writes the generated snapshot to SQLite in a transaction
+- returns the persisted snapshot as a typed DTO
+
+This layer intentionally does not include the folder picker UI, duplicate handling UI, metadata editing, archive import, or multi-chapter splitting. Those can build on the same storage boundary.
+
 ## Current Commands
 
 - `storage_init_database`
+- `storage_import_local_folder`
 - `storage_upsert_library_snapshot`
 - `storage_get_library_snapshot`
 - `storage_upsert_reading_progress`

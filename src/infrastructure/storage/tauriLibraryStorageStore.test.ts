@@ -98,4 +98,15 @@ describe("createTauriLibraryStorageStore", () => {
 
     await expect(store.saveReadingProgress(progress)).resolves.toEqual(progress);
   });
+
+  it("imports a local folder through the typed boundary", async () => {
+    const store = createTauriLibraryStorageStore(async (command, args) => {
+      expect(command).toBe("storage_import_local_folder");
+      expect(args).toEqual({ path: "D:/library/Inkline" });
+
+      return snapshot;
+    });
+
+    await expect(store.importLocalFolder("D:/library/Inkline")).resolves.toEqual(snapshot);
+  });
 });
