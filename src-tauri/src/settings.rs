@@ -78,7 +78,8 @@ fn read_settings<R: Runtime>(app: &AppHandle<R>) -> Result<AppSettings, String> 
     let content = fs::read_to_string(&path)
         .map_err(|error| format!("Failed to read settings file: {error}"))?;
 
-    serde_json::from_str(&content).map_err(|error| format!("Failed to parse settings file: {error}"))
+    serde_json::from_str(&content)
+        .map_err(|error| format!("Failed to parse settings file: {error}"))
 }
 
 fn write_settings<R: Runtime>(app: &AppHandle<R>, settings: &AppSettings) -> Result<(), String> {

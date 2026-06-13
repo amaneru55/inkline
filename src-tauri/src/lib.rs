@@ -1,6 +1,7 @@
 #[cfg(desktop)]
 mod desktop;
 mod settings;
+mod storage;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -15,7 +16,12 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             settings::get_app_settings,
-            settings::set_app_settings
+            settings::set_app_settings,
+            storage::database::storage_get_library_snapshot,
+            storage::database::storage_get_reading_progress,
+            storage::database::storage_init_database,
+            storage::database::storage_upsert_library_snapshot,
+            storage::database::storage_upsert_reading_progress
         ]);
 
     #[cfg(desktop)]
