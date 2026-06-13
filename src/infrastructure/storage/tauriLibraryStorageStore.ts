@@ -19,6 +19,9 @@ export const createTauriLibraryStorageStore = (
   async init() {
     return parseDatabaseInfo(await invokeCommand("storage_init_database"));
   },
+  async importLocalFolder(path: string) {
+    return parseLibrarySnapshot(await invokeCommand("storage_import_local_folder", { path }));
+  },
   async saveLibrarySnapshot(snapshot: LibrarySnapshot) {
     return parseLibrarySnapshot(
       await invokeCommand("storage_upsert_library_snapshot", { snapshot }),
