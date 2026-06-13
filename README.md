@@ -27,6 +27,7 @@ InkNest 是一个本地优先的跨平台漫画阅读器项目，产品名为 In
 工程约定见：
 
 - [docs/FRONTEND_ARCHITECTURE.md](docs/FRONTEND_ARCHITECTURE.md)：前端分层、技术栈和组件模式。
+- [docs/BOUNDARIES.md](docs/BOUNDARIES.md)：前端、Rust 后端和运行时校验边界。
 - [docs/CODE_STYLE.md](docs/CODE_STYLE.md)：TypeScript、Rust、文件组织和不确定性处理规则。
 - [docs/UI_SYSTEM.md](docs/UI_SYSTEM.md)：HeroUI token、主题、标题栏和 Storybook 要求。
 - [docs/I18N.md](docs/I18N.md)：国际化结构和文案规则。
@@ -186,3 +187,5 @@ make tauri-build
 - `themeName` 和 `themeMode` 分离：主题表示 token 套装，外观模式表示 `system` / `light` / `dark`。
 - 语言、主题、关闭行为等轻量偏好先进入 app settings；书架、阅读进度、任务、缓存索引、AI 结果等业务数据后续进入 SQLite。
 - Storybook 和测试使用内存 settings store，避免污染真实用户配置。
+- 已建立 `core/library` 和 `core/reader` 的第一版纯 TypeScript 模型与测试，用于承接后续本地导入、资料库和阅读器实现。
+- Zod 作为前端不可信边界的运行时校验库；开发期 pnpm `minimumReleaseAge` 设为 60 分钟，发布前再提高安全窗口。

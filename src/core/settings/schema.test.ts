@@ -3,6 +3,7 @@ import {
   defaultSettings,
   getThemeFullName,
   normalizeAppSettings,
+  parseAppSettings,
   resolveCloseBehavior,
   resolveColorMode,
   resolveSettingsLanguage,
@@ -25,6 +26,11 @@ describe("settings schema", () => {
       themeMode: "dark",
       closeBehavior: "exit",
     });
+  });
+
+  it("parses trusted settings payloads and rejects invalid boundary data", () => {
+    expect(parseAppSettings(defaultSettings)).toEqual(defaultSettings);
+    expect(() => parseAppSettings({ ...defaultSettings, themeMode: "sepia" })).toThrow();
   });
 
   it("resolves individual setting values", () => {
