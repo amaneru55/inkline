@@ -1,6 +1,6 @@
 # InkNest
 
-InkNest 是一个本地优先的跨平台漫画阅读器项目，产品名为 Inkline，中文名暂定“墨线”。它的目标是在 Windows、macOS、Linux、Android 和 iOS 上提供一致、顺滑、可扩展的漫画阅读体验。
+InkNest 是一个本地优先的跨平台漫画阅读器项目，产品名为 Inkline，中文名为“墨线”。它的目标是在 Windows、macOS、Linux、Android 和 iOS 上提供一致、顺滑、可扩展的漫画阅读体验。
 
 项目同时面向本地漫画收藏、在线漫画服务、网盘资源和 AI 辅助阅读场景：既能管理本地压缩包和图片文件夹，也能接入常见在线漫画源与个人云盘；既能作为轻量阅读器，也能通过本地模型完成 OCR、翻译和嵌字，帮助用户阅读不同语言的漫画。
 
@@ -32,13 +32,25 @@ InkNest 是一个本地优先的跨平台漫画阅读器项目，产品名为 In
 - [docs/I18N.md](docs/I18N.md)：国际化结构和文案规则。
 - [docs/TESTING.md](docs/TESTING.md)：测试策略、覆盖率目标和性能回归检查。
 
+## 当前状态
+
+- 已完成 Tauri + React + TypeScript 基础应用骨架。
+- 已接入 Vite、Tailwind CSS、HeroUI、Motion、TanStack Query/Router/Virtual、i18next、Biome、Vitest 和 Storybook。
+- 已固定 Volta Node 版本与 pnpm package manager 版本。
+- 已建立主题系统：`themeName` 与 `themeMode` 分离，默认跟随系统明暗模式。
+- 已建立基础 i18n、Storybook story 和 Vitest 测试。
+- 已生成并替换 Windows、macOS、Linux、Android、iOS 所需的应用图标资源。
+- 已接入桌面端基础壳能力：原生菜单、system tray、关闭到托盘、窗口状态保存与恢复。
+- 已提供跨平台 `Makefile` 常用命令。
+
 ### 0. 项目基础
 
-- [ ] 搭建基础应用框架：Tauri + React + TypeScript，明确桌面端和未来移动端的共享边界。
-- [ ] 建立前端工程规范：Biome、Vitest、Storybook、Tailwind、HeroUI、TanStack、Motion 和 i18n 的项目级约束。
+- [x] 搭建基础应用框架：Tauri + React + TypeScript，明确桌面端和未来移动端的共享边界。
+- [x] 建立前端工程规范：Biome、Vitest、Storybook、Tailwind、HeroUI、TanStack、Motion 和 i18n 的项目级约束。
 - [ ] 建立统一的数据模型：漫画、章节、页、来源、阅读进度、标签、收藏、历史记录。
 - [ ] 设计本地数据库结构，用于保存书架、元数据、索引、阅读记录和任务状态。
 - [ ] 建立基础设置页：语言、主题、缓存路径、阅读偏好、代理、快捷键和隐私选项。
+- [x] 建立桌面基础壳能力：原生菜单、托盘图标、关闭到托盘和窗口状态保存/恢复。
 - [ ] 完成打包与发布流程：Windows、macOS、Linux 的安装包、便携包和自动更新策略。
 
 ### 1. 本地漫画阅读
@@ -136,13 +148,33 @@ InkNest 是一个本地优先的跨平台漫画阅读器项目，产品名为 In
 ## 开发
 
 ```bash
-pnpm install
+make install
+make tauri-dev
+```
+
+常用命令：
+
+```bash
+make dev              # 启动 Vite dev server
+make tauri-dev        # 启动 Tauri 桌面 dev app
+make sb               # 启动 Storybook
+make check            # 运行 Biome 检查
+make test             # 运行 Vitest
+make build            # 构建前端
+make rust-check       # 运行 cargo check
+make verify           # 运行主要验证任务
+```
+
+直接使用 pnpm 也可以：
+
+```bash
+pnpm sb
+pnpm storybook
 pnpm tauri dev
 ```
 
-构建：
+构建桌面应用：
 
 ```bash
-pnpm build
-pnpm tauri build
+make tauri-build
 ```
